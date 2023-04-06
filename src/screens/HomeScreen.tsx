@@ -6,10 +6,11 @@ import {
   ListRenderItemInfo,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import data from '../data';
 import {useNavigation} from '@react-navigation/native';
 import Animated from 'react-native-reanimated';
+import AnimationSkeleton from './AnimationSkeleton';
 
 const CityItem = ({
   name,
@@ -42,9 +43,26 @@ const CityItem = ({
 };
 
 const HomeScreen = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
   const renderItem = ({item}: ListRenderItemInfo<any>) => (
     <CityItem name={item.name} image={item.image} id={item.id} />
   );
+
+  if (loading)
+    return (
+      <FlatList
+        data={Array(8)}
+        renderItem={() => <AnimationSkeleton />}
+        numColumns={2}
+      />
+    );
 
   return (
     <View style={styles.container}>
